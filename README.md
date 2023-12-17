@@ -45,7 +45,7 @@
 
 
 ## ERD 
-<img width="832"  src="https://github.com/yun-seonghyuk/communityBoard/blob/main/%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0%20%EA%B2%8C%EC%8B%9C%ED%8C%90.png">
+![ERD](doc/img/%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0%20%EA%B2%8C%EC%8B%9C%ED%8C%90.png)
 
 ## Trouble Shooting
 [go to the trouble shooting section](doc/TROUBLE_SHOOTING.md)
