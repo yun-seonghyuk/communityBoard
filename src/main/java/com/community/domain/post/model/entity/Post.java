@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.List;
 @NoArgsConstructor
@@ -28,6 +29,14 @@ public class Post extends TimeStamped {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Column
+    @ColumnDefault("0")
+    private Integer viewCount;
+
+    @Column
+    @ColumnDefault("0")
+    private Integer likeCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
@@ -38,5 +47,9 @@ public class Post extends TimeStamped {
     public void postUpdate(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
+    }
+
+    public void viewUpdate() {
+        this.viewCount++;
     }
 }

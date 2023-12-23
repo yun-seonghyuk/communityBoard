@@ -22,6 +22,7 @@ public class PostResponseDto {
     private String username;
     private String title;
     private String content;
+    private Integer viewCount;
     private LocalDateTime createAt;
     private LocalDateTime modifiedAt;
     private List<CommentResponseDto> commentList = new ArrayList<>();
@@ -29,9 +30,10 @@ public class PostResponseDto {
     public static PostResponseDto of(Post post) {
         return PostResponseDto.builder()
                 .id(post.getId())
+                .username(post.getUser().getUsername())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .username(post.getUser().getUsername())
+                .viewCount(post.getViewCount())
                 .createAt(post.getCreatedAt())
                 .modifiedAt(post.getModifiedAt())
                 .build();
@@ -39,9 +41,10 @@ public class PostResponseDto {
     public static PostResponseDto from(Post post) {
         return PostResponseDto.builder()
                 .id(post.getId())
+                .username(post.getUser().getUsername())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .username(post.getUser().getUsername())
+                .viewCount(post.getViewCount())
                 .createAt(post.getCreatedAt())
                 .modifiedAt(post.getModifiedAt())
                 .commentList(post.getCommentList().stream()

@@ -1,12 +1,11 @@
 package com.community.domain.post.api;
 
 import com.community.domain.auth.sercurity.UserDetailsImpl;
-import com.community.domain.post.application.impl.CommentServiceImpl;
+import com.community.domain.post.application.CommentService;
 import com.community.domain.post.model.dto.CommentRequestDto;
 import com.community.domain.post.model.dto.CommentResponseDto;
 import com.community.global.common.ServiceResult;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +13,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/post/{postId}")
-@Slf4j
 public class CommentController {
 
 
-    private final CommentServiceImpl commentService;
+    private final CommentService commentService;
 
     @PostMapping("/comment")
     public CommentResponseDto createComment(@PathVariable Long postId,

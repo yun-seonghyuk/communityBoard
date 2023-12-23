@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService {
                 .content(requestDto.getContent())
                 .build());
 
-        return PostResponseDto.from(post);
+        return PostResponseDto.of(post);
     }
 
     @Transactional(readOnly = true)
@@ -66,6 +66,12 @@ public class PostServiceImpl implements PostService {
         Post post = findPostOrElseThrow(id);
         checkAuthorship(post, user);
         postRepository.delete(post);
+    }
+    @Transactional
+    @Override
+    public void views(Long id) {
+        Post post = findPostOrElseThrow(id);
+        post.viewUpdate();
     }
 
     private Post findPostOrElseThrow(Long id) {

@@ -2,23 +2,21 @@ package com.community.domain.post.api;
 
 
 import com.community.domain.auth.sercurity.UserDetailsImpl;
-import com.community.domain.post.application.impl.PostServiceImpl;
+import com.community.domain.post.application.PostService;
 import com.community.domain.post.model.dto.PostRequestDto;
 import com.community.domain.post.model.dto.PostResponseDto;
 import com.community.global.common.ServiceResult;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostServiceImpl postService;
+    private final PostService postService;
 
     @PostMapping("/post")
     public ResponseEntity<?> createPost(@RequestBody PostRequestDto requestDto,
@@ -34,8 +32,9 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}")
-    public PostResponseDto getPost(@PathVariable Long id) {
-        return postService.getPost(id);
+    public ResponseEntity<?> getPost(@PathVariable Long id) {
+        postService.views(id);
+        return ResponseEntity.ok().body(postService.getPost(id));
     }
 
     @PutMapping("/post/update/{id}")
