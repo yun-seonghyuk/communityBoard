@@ -1,7 +1,8 @@
 package com.community.domain.auth.sercurity;
 
-import com.sparta.springlv2.domain.auth.model.entity.User;
-import com.sparta.springlv2.domain.auth.repository.UserRepository;
+
+import com.community.domain.auth.model.entity.User;
+import com.community.domain.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

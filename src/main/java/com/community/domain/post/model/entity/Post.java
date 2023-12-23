@@ -1,8 +1,8 @@
-package com.community.domain.post.domain.entity;
+package com.community.domain.post.model.entity;
 
-import com.sparta.springlv2.domain.auth.model.entity.User;
-import com.sparta.springlv2.domain.post.domain.dto.PostRequestDto;
-import com.sparta.springlv2.global.common.entity.TimeStamped;
+import com.community.domain.auth.model.entity.User;
+import com.community.domain.post.model.dto.PostRequestDto;
+import com.community.global.common.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

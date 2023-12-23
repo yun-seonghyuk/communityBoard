@@ -1,12 +1,13 @@
 package com.community.domain.post.application.impl;
 
-import com.sparta.springlv2.domain.auth.model.entity.User;
-import com.sparta.springlv2.domain.post.application.PostService;
-import com.sparta.springlv2.domain.post.domain.dto.PostRequestDto;
-import com.sparta.springlv2.domain.post.domain.dto.PostResponseDto;
-import com.sparta.springlv2.domain.post.domain.entity.Post;
-import com.sparta.springlv2.domain.post.exception.PostException;
-import com.sparta.springlv2.domain.post.repository.PostRepository;
+
+import com.community.domain.auth.model.entity.User;
+import com.community.domain.post.application.PostService;
+import com.community.domain.post.exception.PostException;
+import com.community.domain.post.model.dto.PostRequestDto;
+import com.community.domain.post.model.dto.PostResponseDto;
+import com.community.domain.post.model.entity.Post;
+import com.community.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
-import static com.sparta.springlv2.global.exception.ErrorCode.NOT_POST_BY_YOU;
-import static com.sparta.springlv2.global.exception.ErrorCode.POST_NOT_FOUND;
+import static com.community.global.exception.ErrorCode.NOT_POST_BY_YOU;
+import static com.community.global.exception.ErrorCode.POST_NOT_FOUND;
 
 
 @Slf4j

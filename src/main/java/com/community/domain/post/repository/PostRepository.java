@@ -1,6 +1,7 @@
 package com.community.domain.post.repository;
 
-import com.sparta.springlv2.domain.post.domain.entity.Post;
+
+import com.community.domain.post.model.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post,Long> {

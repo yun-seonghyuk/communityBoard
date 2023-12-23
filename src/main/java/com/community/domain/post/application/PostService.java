@@ -1,8 +1,8 @@
 package com.community.domain.post.application;
 
-import com.sparta.springlv2.domain.auth.model.entity.User;
-import com.sparta.springlv2.domain.post.domain.dto.PostRequestDto;
-import com.sparta.springlv2.domain.post.domain.dto.PostResponseDto;
+import com.community.domain.auth.model.entity.User;
+import com.community.domain.post.model.dto.PostRequestDto;
+import com.community.domain.post.model.dto.PostResponseDto;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.community.domain.post.domain.dto;
+package com.community.domain.post.model.dto;
 
 import lombok.Data;
 

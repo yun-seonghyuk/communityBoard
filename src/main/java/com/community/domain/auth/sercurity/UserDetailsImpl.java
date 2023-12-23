@@ -1,7 +1,7 @@
 package com.community.domain.auth.sercurity;
 
-import com.sparta.springlv2.domain.auth.model.entity.User;
-import com.sparta.springlv2.domain.auth.model.type.UserRoleEnum;
+import com.community.domain.auth.model.entity.User;
+import com.community.domain.auth.model.type.UserRoleEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,6 +26,7 @@ public class UserDetailsImpl implements UserDetails {
     public String getUsername() {
         return user.getEmail();
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

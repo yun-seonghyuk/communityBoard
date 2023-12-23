@@ -1,8 +1,10 @@
 package com.community.domain.post.application;
 
-import com.sparta.springlv2.domain.auth.model.entity.User;
-import com.sparta.springlv2.domain.post.domain.dto.CommentRequestDto;
-import com.sparta.springlv2.domain.post.domain.dto.CommentResponseDto;
+
+import com.community.domain.auth.model.entity.User;
+import com.community.domain.post.model.dto.CommentRequestDto;
+import com.community.domain.post.model.dto.CommentResponseDto;
+
 
 public interface CommentService {
     CommentResponseDto createComment(CommentRequestDto requestDto, User user, Long id);

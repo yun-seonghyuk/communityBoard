@@ -1,8 +1,8 @@
 package com.community.global.advice;
 
-import com.sparta.springlv2.domain.auth.exception.MemberException;
-import com.sparta.springlv2.domain.post.exception.PostException;
-import com.sparta.springlv2.global.common.ServiceResult;
+import com.community.domain.auth.exception.MemberException;
+import com.community.domain.post.exception.PostException;
+import com.community.global.common.ServiceResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

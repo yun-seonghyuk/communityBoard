@@ -1,5 +1,6 @@
 package com.community.domain.auth.model.dto;
 
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

@@ -1,7 +1,6 @@
 package com.community.global.util;
 
-
-import com.sparta.springlv2.domain.auth.model.type.UserRoleEnum;
+import com.community.domain.auth.model.type.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;

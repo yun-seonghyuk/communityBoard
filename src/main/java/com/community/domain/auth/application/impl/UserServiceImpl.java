@@ -1,22 +1,24 @@
 package com.community.domain.auth.application.impl;
 
-import com.sparta.springlv2.domain.auth.application.UserService;
-import com.sparta.springlv2.domain.auth.exception.MemberException;
-import com.sparta.springlv2.domain.auth.model.dto.SignupRequestDto;
-import com.sparta.springlv2.domain.auth.model.entity.User;
-import com.sparta.springlv2.domain.auth.model.type.UserRoleEnum;
-import com.sparta.springlv2.domain.auth.repository.UserRepository;
+import com.community.domain.auth.application.UserService;
+import com.community.domain.auth.exception.MemberException;
+import com.community.domain.auth.model.dto.SignupRequestDto;
+import com.community.domain.auth.model.entity.User;
+import com.community.domain.auth.model.type.UserRoleEnum;
+import com.community.domain.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.sparta.springlv2.global.exception.ErrorCode.DUPLICATE_EMAIL;
-import static com.sparta.springlv2.global.exception.ErrorCode.INVALID_ADMIN_PASSWORD;
+import static com.community.global.exception.ErrorCode.DUPLICATE_EMAIL;
+import static com.community.global.exception.ErrorCode.INVALID_ADMIN_PASSWORD;
+
 
 @Service
 @RequiredArgsConstructor
+
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;

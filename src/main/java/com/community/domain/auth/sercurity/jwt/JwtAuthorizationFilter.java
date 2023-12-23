@@ -1,7 +1,7 @@
 package com.community.domain.auth.sercurity.jwt;
 
-import com.sparta.springlv2.domain.auth.sercurity.UserDetailsServiceImpl;
-import com.sparta.springlv2.global.util.JwtUtil;
+import com.community.domain.auth.sercurity.UserDetailsServiceImpl;
+import com.community.global.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

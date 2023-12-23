@@ -1,9 +1,9 @@
 package com.community.global.config;
 
-import com.sparta.springlv2.domain.auth.sercurity.UserDetailsServiceImpl;
-import com.sparta.springlv2.domain.auth.sercurity.jwt.JwtAuthenticationFilter;
-import com.sparta.springlv2.domain.auth.sercurity.jwt.JwtAuthorizationFilter;
-import com.sparta.springlv2.global.util.JwtUtil;
+import com.community.domain.auth.sercurity.UserDetailsServiceImpl;
+import com.community.domain.auth.sercurity.jwt.JwtAuthenticationFilter;
+import com.community.domain.auth.sercurity.jwt.JwtAuthorizationFilter;
+import com.community.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

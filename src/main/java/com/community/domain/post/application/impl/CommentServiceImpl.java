@@ -1,20 +1,21 @@
 package com.community.domain.post.application.impl;
 
-import com.sparta.springlv2.domain.auth.model.entity.User;
-import com.sparta.springlv2.domain.post.application.CommentService;
-import com.sparta.springlv2.domain.post.domain.dto.CommentRequestDto;
-import com.sparta.springlv2.domain.post.domain.dto.CommentResponseDto;
-import com.sparta.springlv2.domain.post.domain.entity.Comment;
-import com.sparta.springlv2.domain.post.domain.entity.Post;
-import com.sparta.springlv2.domain.post.exception.PostException;
-import com.sparta.springlv2.domain.post.repository.CommentRepository;
-import com.sparta.springlv2.domain.post.repository.PostRepository;
+import com.community.domain.auth.model.entity.User;
+import com.community.domain.post.application.CommentService;
+import com.community.domain.post.model.dto.CommentRequestDto;
+import com.community.domain.post.model.dto.CommentResponseDto;
+import com.community.domain.post.model.entity.Comment;
+import com.community.domain.post.model.entity.Post;
+import com.community.domain.post.exception.PostException;
+import com.community.domain.post.repository.CommentRepository;
+import com.community.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.sparta.springlv2.global.exception.ErrorCode.COMMENT_NOT_FOUND;
-import static com.sparta.springlv2.global.exception.ErrorCode.POST_NOT_FOUND;
+import static com.community.global.exception.ErrorCode.COMMENT_NOT_FOUND;
+import static com.community.global.exception.ErrorCode.POST_NOT_FOUND;
+
 
 @Service
 @RequiredArgsConstructor

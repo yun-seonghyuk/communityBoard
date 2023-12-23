@@ -1,7 +1,8 @@
 package com.community.domain.auth.model.entity;
 
-import com.sparta.springlv2.domain.auth.model.type.UserRoleEnum;
-import com.sparta.springlv2.global.common.entity.TimeStamped;
+
+import com.community.domain.auth.model.type.UserRoleEnum;
+import com.community.global.common.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

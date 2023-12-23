@@ -1,11 +1,11 @@
 package com.community.domain.auth.sercurity.jwt;
 
+import com.community.domain.auth.model.dto.LoginRequestDto;
+import com.community.domain.auth.model.entity.User;
+import com.community.domain.auth.sercurity.UserDetailsImpl;
+import com.community.global.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.sparta.springlv2.domain.auth.model.dto.LoginRequestDto;
-import com.sparta.springlv2.domain.auth.model.entity.User;
-import com.sparta.springlv2.domain.auth.sercurity.UserDetailsImpl;
-import com.sparta.springlv2.global.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

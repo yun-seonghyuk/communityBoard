@@ -1,8 +1,9 @@
 package com.community.domain.auth.api;
 
-import com.sparta.springlv2.domain.auth.application.impl.UserServiceImpl;
-import com.sparta.springlv2.domain.auth.model.dto.SignupRequestDto;
-import com.sparta.springlv2.global.common.ServiceResult;
+
+import com.community.domain.auth.application.impl.UserServiceImpl;
+import com.community.domain.auth.model.dto.SignupRequestDto;
+import com.community.global.common.ServiceResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

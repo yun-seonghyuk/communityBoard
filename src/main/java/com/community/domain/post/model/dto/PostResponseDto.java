@@ -1,6 +1,6 @@
-package com.community.domain.post.domain.dto;
+package com.community.domain.post.model.dto;
 
-import com.sparta.springlv2.domain.post.domain.entity.Post;
+import com.community.domain.post.model.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,10 +1,10 @@
 package com.community.domain.post.api;
 
-import com.sparta.springlv2.domain.auth.sercurity.UserDetailsImpl;
-import com.sparta.springlv2.domain.post.application.impl.CommentServiceImpl;
-import com.sparta.springlv2.domain.post.domain.dto.CommentRequestDto;
-import com.sparta.springlv2.domain.post.domain.dto.CommentResponseDto;
-import com.sparta.springlv2.global.common.ServiceResult;
+import com.community.domain.auth.sercurity.UserDetailsImpl;
+import com.community.domain.post.application.impl.CommentServiceImpl;
+import com.community.domain.post.model.dto.CommentRequestDto;
+import com.community.domain.post.model.dto.CommentResponseDto;
+import com.community.global.common.ServiceResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

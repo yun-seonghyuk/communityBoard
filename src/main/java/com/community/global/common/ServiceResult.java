@@ -1,6 +1,6 @@
 package com.community.global.common;
 
-import com.sparta.springlv2.global.exception.ErrorCode;
+import com.community.global.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
