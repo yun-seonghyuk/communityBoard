@@ -28,8 +28,8 @@ out/
 
 
 #application.yaml
-/src/main/resources/application.yaml
-/src/main/resources/application.properties
+resources/application.yaml
+resources/application.properties
 
 
 ### NetBeans ###
