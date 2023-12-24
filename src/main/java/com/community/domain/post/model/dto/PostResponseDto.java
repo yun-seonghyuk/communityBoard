@@ -38,6 +38,7 @@ public class PostResponseDto {
                 .modifiedAt(post.getModifiedAt())
                 .build();
     }
+
     public static PostResponseDto from(Post post) {
         return PostResponseDto.builder()
                 .id(post.getId())

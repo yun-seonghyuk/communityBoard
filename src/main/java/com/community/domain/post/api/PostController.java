@@ -19,7 +19,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/post")
-    public ResponseEntity<?> createPost(@RequestBody PostRequestDto requestDto,
+    public ResponseEntity<?> createPost(@RequestBody final PostRequestDto requestDto,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         return ResponseEntity.ok()
@@ -33,7 +33,6 @@ public class PostController {
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<?> getPost(@PathVariable Long id) {
-        postService.views(id);
         return ResponseEntity.ok().body(postService.getPost(id));
     }
 

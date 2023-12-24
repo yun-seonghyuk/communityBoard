@@ -16,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
-import static com.community.global.exception.ErrorCode.NOT_POST_BY_YOU;
-import static com.community.global.exception.ErrorCode.POST_NOT_FOUND;
+import static com.community.global.exception.ErrorCode.*;
 
 
 @Slf4j
@@ -26,6 +25,8 @@ import static com.community.global.exception.ErrorCode.POST_NOT_FOUND;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+
+
     @Override
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
         Post post = postRepository.save(Post.builder()
@@ -56,22 +57,17 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto updatePost(Long id, PostRequestDto postRequestDto, User user) {
         Post post = findPostOrElseThrow(id);
-        checkAuthorship(post, user);
+        checkPostAuthor(post, user);
         post.postUpdate(postRequestDto);
 
         return PostResponseDto.of(post);
     }
+
     @Override
     public void deletePost(Long id, User user) {
         Post post = findPostOrElseThrow(id);
-        checkAuthorship(post, user);
+        checkPostAuthor(post, user);
         postRepository.delete(post);
-    }
-    @Transactional
-    @Override
-    public void views(Long id) {
-        Post post = findPostOrElseThrow(id);
-        post.viewUpdate();
     }
 
     private Post findPostOrElseThrow(Long id) {
@@ -79,9 +75,10 @@ public class PostServiceImpl implements PostService {
                 new PostException(POST_NOT_FOUND));
     }
 
-    private void checkAuthorship(Post post, User user) {
+    // 게시물 작성자 존재여부 확인
+    private void checkPostAuthor(Post post, User user) {
         if (!Objects.equals(post.getUser().getId(), user.getId())) {
-            throw new PostException(NOT_POST_BY_YOU);
+            throw new PostException(NOT_POST_BY_USER);
         }
     }
 

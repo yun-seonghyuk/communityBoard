@@ -1,6 +1,6 @@
 package com.community.global.util;
 
-import com.community.domain.auth.model.type.UserRoleEnum;
+import com.community.domain.auth.model.type.UserRole;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -27,28 +27,25 @@ public class JwtUtil {
     public static final String AUTHORIZATION_KEY = "auth";
     public static final String BEARER_PREFIX = "Bearere ";
 
-
     // 토큰 만료시간
     private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
-
-    // 로그 설정
 
     @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
     private String secretKey;
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-    // JWT 생성
 
+    // JWT 생성
     @PostConstruct
     public void init(){
         byte[] bytes = Base64.getDecoder().decode(secretKey);
         key = Keys.hmacShaKeyFor(bytes);
 
     }
-    // 토큰 생성
-    public String createToken(String email, UserRoleEnum role) {
-        Date date = new Date();
 
+    // 토큰 생성
+    public String createToken(String email, UserRole role) {
+        Date date = new Date();
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(email) // 사용자 식별자값(ID)
@@ -71,6 +68,7 @@ public class JwtUtil {
         // Response 객체에 Cookie 추가
         res.addCookie(cookie);
     }
+
     // Cookie에 들어있던 JWT 토큰을 Substring
     // JWT 토큰 substring
     public String substringToken(String tokenValue) {
@@ -80,8 +78,7 @@ public class JwtUtil {
         throw new NullPointerException("Not Found Token");
     }
 
-    //JWT 검증
-    // 토큰 검증
+    //JWT 토큰 검증
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);

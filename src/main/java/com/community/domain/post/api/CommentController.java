@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/post/{postId}")
 public class CommentController {
 
-
     private final CommentService commentService;
 
     @PostMapping("/comment")

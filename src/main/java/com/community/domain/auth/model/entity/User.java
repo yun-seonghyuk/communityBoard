@@ -1,7 +1,7 @@
 package com.community.domain.auth.model.entity;
 
 
-import com.community.domain.auth.model.type.UserRoleEnum;
+import com.community.domain.auth.model.type.UserRole;
 import com.community.global.common.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,6 +32,6 @@ public class User extends TimeStamped {
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private UserRoleEnum role;
+    private UserRole role;
 
 }
