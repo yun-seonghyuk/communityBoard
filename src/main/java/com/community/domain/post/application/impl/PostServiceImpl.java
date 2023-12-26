@@ -6,10 +6,11 @@ import com.community.domain.post.application.PostService;
 import com.community.domain.post.exception.PostException;
 import com.community.domain.post.model.dto.PostRequestDto;
 import com.community.domain.post.model.dto.PostResponseDto;
+import com.community.domain.post.model.dto.Posts;
 import com.community.domain.post.model.entity.Post;
 import com.community.domain.post.repository.PostRepository;
+import com.community.global.config.RedisCacheConfig;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,7 @@ import static com.community.global.exception.ErrorCode.POST_NOT_FOUND;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
-
+    private final RedisCacheConfig redisCacheConfig;
 
     @Override
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
@@ -39,17 +40,19 @@ public class PostServiceImpl implements PostService {
 
 
     @Transactional(readOnly = true)
-    @Cacheable(key = "'posts'", value = "postCache")
+//    @Cacheable( value = "allPosts")
+//    @Cacheable(cacheNames = "posts", key = "'all'")
     @Override
-    public List<PostResponseDto> getAllPosts() {
-        return postRepository.findAll()
+    public Posts getAllPosts() {
+        List<PostResponseDto> posts = postRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
                 .map(PostResponseDto::from)
                 .toList();
+
+        return new Posts(posts);
     }
 
     @Transactional(readOnly = true)
-//    @Cacheable(key = "#id", value = "postCache")
     @Override
     public PostResponseDto getPost(Long id) {
         return PostResponseDto.from(findPostOrElseThrow(id));
@@ -64,6 +67,20 @@ public class PostServiceImpl implements PostService {
 
         return PostResponseDto.of(post);
     }
+
+//    public void addViewCntToRedis(Long productId) {
+//        String key = "productViewCnt::"+productId;
+//        //hint 캐시에 값이 없으면 레포지토리에서 조회 있으면 값을 증가시킨다.
+//        ValueOperations valueOperations = redisCacheConfig.redisTemplate().opsForValue();
+//        if(valueOperations.get(key)==null)
+//            valueOperations.set(
+//                    key,
+//                    String.valueOf(productRepository.findProductViewCnt(productId)),
+//                    Duration.ofMinutes(5));
+//        else
+//            valueOperations.increment(key);
+//        log.info("value:{}",valueOperations.get(key));
+//    }
 
     @Override
     public void deletePost(Long id, User user) {

@@ -45,14 +45,23 @@ public class RedisCacheConfig  {
     }
 
     @Bean
-    public RedisTemplate<String, ?> redisTemplate(){
-        RedisTemplate<String, ?> redisTemplate = new RedisTemplate<>();
-
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
-
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-
-        return redisTemplate;
+    public RedisTemplate<?, ?> redisTemplate() {
+        RedisTemplate<byte[], byte[]> template = new RedisTemplate<>();
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        template.setConnectionFactory(redisConnectionFactory());
+        return template;
     }
+
+//    @Bean
+//    public RedisTemplate<String, ?> redisTemplate(){
+//        RedisTemplate<String, ?> redisTemplate = new RedisTemplate<>();
+//
+//        redisTemplate.setConnectionFactory(redisConnectionFactory());
+//
+//        redisTemplate.setKeySerializer(new StringRedisSerializer());
+//        redisTemplate.setValueSerializer(new StringRedisSerializer());
+//
+//        return redisTemplate;
+//    }
 }

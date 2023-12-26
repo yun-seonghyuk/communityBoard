@@ -37,8 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void emailDuplicateCheck(String email) {
-        userRepository.findByEmail(email)
-                .ifPresent(user -> {
+        userRepository.findByEmail(email).ifPresent(user -> {
                     throw new MemberException(DUPLICATE_EMAIL);
                 });
     }
