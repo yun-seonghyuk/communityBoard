@@ -45,23 +45,21 @@ public class RedisCacheConfig  {
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
-        RedisTemplate<byte[], byte[]> template = new RedisTemplate<>();
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new StringRedisSerializer());
-        template.setConnectionFactory(redisConnectionFactory());
-        return template;
-    }
+    public RedisTemplate<String, String> redisTemplate() {
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
 
-//    @Bean
-//    public RedisTemplate<String, ?> redisTemplate(){
-//        RedisTemplate<String, ?> redisTemplate = new RedisTemplate<>();
-//
-//        redisTemplate.setConnectionFactory(redisConnectionFactory());
-//
-//        redisTemplate.setKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setValueSerializer(new StringRedisSerializer());
-//
-//        return redisTemplate;
-//    }
+        // 일반적인 key:value의 경우 시리얼라이저
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+
+        // Hash를 사용할 경우 시리얼라이저
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
+
+        // 모든 경우
+        redisTemplate.setDefaultSerializer(new StringRedisSerializer());
+
+        return redisTemplate;
+    }
 }

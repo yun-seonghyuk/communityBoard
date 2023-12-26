@@ -52,4 +52,8 @@ public class Post extends TimeStamped {
     public void viewUpdate() {
         this.viewCount++;
     }
+
+    public void viewCountUpdate(int viewCount) {
+        this.viewCount = viewCount;
+    }
 }

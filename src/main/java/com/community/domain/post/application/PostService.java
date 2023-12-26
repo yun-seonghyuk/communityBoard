@@ -17,4 +17,8 @@ public interface PostService {
 
     void deletePost(Long id, User user);
 
+    void PostViewCount(Long postId);
+
+    void writeBackToDatabase();
+
 }

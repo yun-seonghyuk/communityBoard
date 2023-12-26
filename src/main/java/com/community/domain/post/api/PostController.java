@@ -28,11 +28,14 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<?> getAllPosts() {
+
+
         return ResponseEntity.ok().body(postService.getAllPosts());
     }
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<?> getPost(@PathVariable Long id) {
+        postService.PostViewCount(id);
         return ResponseEntity.ok().body(postService.getPost(id));
     }
 

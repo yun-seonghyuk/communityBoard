@@ -11,11 +11,13 @@ import com.community.domain.post.model.entity.Post;
 import com.community.domain.post.repository.PostRepository;
 import com.community.global.config.RedisCacheConfig;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.community.global.exception.ErrorCode.NOT_POST_BY_USER;
 import static com.community.global.exception.ErrorCode.POST_NOT_FOUND;
@@ -40,10 +42,9 @@ public class PostServiceImpl implements PostService {
 
 
     @Transactional(readOnly = true)
-//    @Cacheable( value = "allPosts")
-//    @Cacheable(cacheNames = "posts", key = "'all'")
     @Override
     public Posts getAllPosts() {
+
         List<PostResponseDto> posts = postRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
                 .map(PostResponseDto::from)
@@ -52,10 +53,12 @@ public class PostServiceImpl implements PostService {
         return new Posts(posts);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public PostResponseDto getPost(Long id) {
-        return PostResponseDto.from(findPostOrElseThrow(id));
+        Post post = findPostOrElseThrow(id);
+        PostViewCount(id);
+        return PostResponseDto.from(post);
     }
 
     @Transactional
@@ -68,19 +71,28 @@ public class PostServiceImpl implements PostService {
         return PostResponseDto.of(post);
     }
 
-//    public void addViewCntToRedis(Long productId) {
-//        String key = "productViewCnt::"+productId;
-//        //hint 캐시에 값이 없으면 레포지토리에서 조회 있으면 값을 증가시킨다.
-//        ValueOperations valueOperations = redisCacheConfig.redisTemplate().opsForValue();
-//        if(valueOperations.get(key)==null)
-//            valueOperations.set(
-//                    key,
-//                    String.valueOf(productRepository.findProductViewCnt(productId)),
-//                    Duration.ofMinutes(5));
-//        else
-//            valueOperations.increment(key);
-//        log.info("value:{}",valueOperations.get(key));
-//    }
+    @Override
+    public void PostViewCount(Long postId) {
+        String viewCountKey = "post:" + postId + ":view_count";
+        redisCacheConfig.redisTemplate().opsForValue().increment(viewCountKey);
+    }
+
+    // Write-Back
+    @Override
+    @Scheduled(fixedRate = 60000) // 1분마다 실행
+    @Transactional
+    public void writeBackToDatabase() {
+        // 조회수 Write-Back
+        Set<String> keys = redisCacheConfig.redisTemplate().keys("post:*:view_count");
+        for (String key : Objects.requireNonNull(keys)) {
+            Long postId = Long.parseLong(key.split(":")[1]);
+            String viewCount = redisCacheConfig.redisTemplate().opsForValue().get(key);
+
+            postRepository.findById(postId).ifPresent(post ->
+                    post.viewCountUpdate(Integer.parseInt(Objects.requireNonNull(viewCount))));
+        }
+    }
+
 
     @Override
     public void deletePost(Long id, User user) {
