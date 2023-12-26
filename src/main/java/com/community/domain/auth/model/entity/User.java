@@ -30,7 +30,7 @@ public class User extends TimeStamped {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 

@@ -25,7 +25,7 @@ public class CommentController {
         return commentService.createComment(requestDto, userDetails.getUser(), postId);
     }
 
-    @PutMapping("/comment/{commentId}")
+    @PatchMapping("/comment/{commentId}")
     public CommentResponseDto updateComment(@PathVariable Long postId,
                                             @PathVariable Long commentId,
                                             @RequestBody CommentRequestDto requestDto,

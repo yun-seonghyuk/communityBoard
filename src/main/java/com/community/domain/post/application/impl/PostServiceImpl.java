@@ -9,17 +9,16 @@ import com.community.domain.post.model.dto.PostResponseDto;
 import com.community.domain.post.model.entity.Post;
 import com.community.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
 
-import static com.community.global.exception.ErrorCode.*;
+import static com.community.global.exception.ErrorCode.NOT_POST_BY_USER;
+import static com.community.global.exception.ErrorCode.POST_NOT_FOUND;
 
-
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -38,7 +37,9 @@ public class PostServiceImpl implements PostService {
         return PostResponseDto.of(post);
     }
 
+
     @Transactional(readOnly = true)
+    @Cacheable(key = "'posts'", value = "postCache")
     @Override
     public List<PostResponseDto> getAllPosts() {
         return postRepository.findAll()
@@ -48,6 +49,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Transactional(readOnly = true)
+//    @Cacheable(key = "#id", value = "postCache")
     @Override
     public PostResponseDto getPost(Long id) {
         return PostResponseDto.from(findPostOrElseThrow(id));
@@ -71,8 +73,8 @@ public class PostServiceImpl implements PostService {
     }
 
     private Post findPostOrElseThrow(Long id) {
-        return postRepository.findById(id).orElseThrow(() ->
-                new PostException(POST_NOT_FOUND));
+        return postRepository.findById(id).orElseThrow(
+                () -> new PostException(POST_NOT_FOUND));
     }
 
     // 게시물 작성자 존재여부 확인

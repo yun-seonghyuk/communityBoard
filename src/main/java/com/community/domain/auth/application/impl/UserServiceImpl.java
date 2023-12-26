@@ -16,7 +16,6 @@ import static com.community.global.exception.ErrorCode.INVALID_ADMIN_PASSWORD;
 
 @Service
 @RequiredArgsConstructor
-
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
