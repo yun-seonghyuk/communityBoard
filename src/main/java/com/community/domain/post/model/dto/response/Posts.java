@@ -1,4 +1,4 @@
-package com.community.domain.post.model.dto;
+package com.community.domain.post.model.dto.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

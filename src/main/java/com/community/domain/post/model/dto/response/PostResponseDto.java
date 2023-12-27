@@ -1,5 +1,6 @@
-package com.community.domain.post.model.dto;
+package com.community.domain.post.model.dto.response;
 
+import com.community.domain.post.model.entity.Comment;
 import com.community.domain.post.model.entity.Post;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,8 +13,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 
 @Data
@@ -27,6 +30,7 @@ public class PostResponseDto {
     private String title;
     private String content;
     private Integer viewCount;
+    private Integer likeCount;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -45,23 +49,45 @@ public class PostResponseDto {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .viewCount(post.getViewCount())
+                .likeCount(post.getLikeCount())
                 .createAt(post.getCreatedAt())
                 .modifiedAt(post.getModifiedAt())
                 .build();
     }
 
-    public static PostResponseDto from(Post post) {
+    public static PostResponseDto allPost(Post post) {
         return PostResponseDto.builder()
                 .id(post.getId())
                 .username(post.getUser().getUsername())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .viewCount(post.getViewCount())
+                .likeCount(post.getLikeCount())
                 .createAt(post.getCreatedAt())
                 .modifiedAt(post.getModifiedAt())
                 .commentList(post.getCommentList().stream()
+                        .sorted(Comparator.comparing(Comment::getCreatedAt).reversed())
                         .map(CommentResponseDto::of)
                         .collect(Collectors.toList()))
                 .build();
     }
+
+    public static PostResponseDto from(Post post, Integer likeCount) {
+        return PostResponseDto.builder()
+                .id(post.getId())
+                .username(post.getUser().getUsername())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .viewCount(post.getViewCount())
+                .likeCount(likeCount)
+                .createAt(post.getCreatedAt())
+                .modifiedAt(post.getModifiedAt())
+                .commentList(post.getCommentList().stream()
+                        .sorted(Comparator.comparing(Comment::getCreatedAt).reversed())
+                        .map(CommentResponseDto::of)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+
 }

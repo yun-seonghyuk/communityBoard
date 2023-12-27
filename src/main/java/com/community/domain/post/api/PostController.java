@@ -3,8 +3,8 @@ package com.community.domain.post.api;
 
 import com.community.domain.auth.sercurity.UserDetailsImpl;
 import com.community.domain.post.application.PostService;
-import com.community.domain.post.model.dto.PostRequestDto;
-import com.community.domain.post.model.dto.PostResponseDto;
+import com.community.domain.post.model.dto.request.PostRequestDto;
+import com.community.domain.post.model.dto.response.PostResponseDto;
 import com.community.global.common.ServiceResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +28,16 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<?> getAllPosts() {
-
-
         return ResponseEntity.ok().body(postService.getAllPosts());
+    }
+
+    @GetMapping("/posts/like")
+    public ResponseEntity<?> getAllLikeDescPosts() {
+        return ResponseEntity.ok().body(postService.getAllLikeDescPosts());
     }
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<?> getPost(@PathVariable Long id) {
-        postService.PostViewCount(id);
         return ResponseEntity.ok().body(postService.getPost(id));
     }
 
@@ -44,7 +46,7 @@ public class PostController {
                                       @RequestBody PostRequestDto postRequestDto,
                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return postService.updatePost(id, postRequestDto, userDetails.getUser()) ;
+        return postService.updatePost(id, postRequestDto, userDetails.getUser());
     }
 
     @DeleteMapping("/post/delete/{id}")
@@ -55,4 +57,12 @@ public class PostController {
         return ResponseEntity.ok()
                 .body(ServiceResult.success("삭제가 완료되었습니다."));
     }
+
+    @PostMapping("post/{postId}/like")
+    public ResponseEntity<?> likePost(@PathVariable Long postId,
+                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.likePost(postId, userDetails.getUser().getId());
+        return ResponseEntity.ok("Post liked successfully");
+    }
+
 }

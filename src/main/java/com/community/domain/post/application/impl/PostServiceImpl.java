@@ -4,20 +4,19 @@ package com.community.domain.post.application.impl;
 import com.community.domain.auth.model.entity.User;
 import com.community.domain.post.application.PostService;
 import com.community.domain.post.exception.PostException;
-import com.community.domain.post.model.dto.PostRequestDto;
-import com.community.domain.post.model.dto.PostResponseDto;
-import com.community.domain.post.model.dto.Posts;
+import com.community.domain.post.model.dto.request.PostRequestDto;
+import com.community.domain.post.model.dto.response.PostResponseDto;
+import com.community.domain.post.model.dto.response.Posts;
 import com.community.domain.post.model.entity.Post;
 import com.community.domain.post.repository.PostRepository;
+import com.community.global.common.RedisKey;
 import com.community.global.config.RedisCacheConfig;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import static com.community.global.exception.ErrorCode.NOT_POST_BY_USER;
 import static com.community.global.exception.ErrorCode.POST_NOT_FOUND;
@@ -44,21 +43,72 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     @Override
     public Posts getAllPosts() {
-
         List<PostResponseDto> posts = postRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
-                .map(PostResponseDto::from)
+                .map(PostResponseDto::allPost)
                 .toList();
 
         return new Posts(posts);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
+    @Override
+    public Posts getAllLikeDescPosts() {
+        List<PostResponseDto> posts = postRepository.findAllByOrderByViewCountDesc()
+                .stream()
+                .map(PostResponseDto::allPost)
+                .toList();
+
+        return new Posts(posts);
+    }
+
     @Override
     public PostResponseDto getPost(Long id) {
         Post post = findPostOrElseThrow(id);
-        PostViewCount(id);
-        return PostResponseDto.from(post);
+        postViewCount(id);
+        return PostResponseDto.from(post, getLikesCountForPost(id));
+    }
+
+    //    @Async
+    public void postViewCount(Long postId) {
+        redisCacheConfig.redisTemplate()
+                .opsForValue()
+                .increment(RedisKey.postViewKey(postId), 1);
+    }
+
+    public Integer getLikesCountForPost(Long postId) {
+        String likes = redisCacheConfig.redisTemplate().opsForValue()
+                .get(RedisKey.postLikesKey(postId));
+        return likes != null ? Integer.parseInt(likes) : 0;
+    }
+
+    @Override
+    public void likePost(Long postId, Long userId) {
+
+        // 사용자가 이미 해당 게시물에 대해 좋아요를 눌렀는지 확인
+        try {
+
+            Boolean alreadyLiked = redisCacheConfig.redisTemplate()
+                    .opsForSet()
+                    .isMember(RedisKey.userLikedPostsKey(userId, postId), String.valueOf(postId));
+
+            if (alreadyLiked != null && alreadyLiked) {
+                // 이미 좋아요를 누른 경우 좋아요 취소
+                redisCacheConfig.redisTemplate().opsForValue()
+                        .decrement(RedisKey.postLikesKey(postId));
+                redisCacheConfig.redisTemplate().opsForSet()
+                        .remove(RedisKey.userLikedPostsKey(userId, postId), String.valueOf(postId));
+            } else {
+                // 아직 좋아요를 누르지 않은 경우 좋아요 추가
+                redisCacheConfig.redisTemplate().opsForValue().increment(RedisKey.postLikesKey(postId));
+                redisCacheConfig.redisTemplate().opsForSet()
+                        .add(RedisKey.userLikedPostsKey(userId, postId), String.valueOf(postId));
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to process like for postId: " + postId);
+        }
+
     }
 
     @Transactional
@@ -70,29 +120,6 @@ public class PostServiceImpl implements PostService {
 
         return PostResponseDto.of(post);
     }
-
-    @Override
-    public void PostViewCount(Long postId) {
-        String viewCountKey = "post:" + postId + ":view_count";
-        redisCacheConfig.redisTemplate().opsForValue().increment(viewCountKey);
-    }
-
-    // Write-Back
-    @Override
-    @Scheduled(fixedRate = 60000) // 1분마다 실행
-    @Transactional
-    public void writeBackToDatabase() {
-        // 조회수 Write-Back
-        Set<String> keys = redisCacheConfig.redisTemplate().keys("post:*:view_count");
-        for (String key : Objects.requireNonNull(keys)) {
-            Long postId = Long.parseLong(key.split(":")[1]);
-            String viewCount = redisCacheConfig.redisTemplate().opsForValue().get(key);
-
-            postRepository.findById(postId).ifPresent(post ->
-                    post.viewCountUpdate(Integer.parseInt(Objects.requireNonNull(viewCount))));
-        }
-    }
-
 
     @Override
     public void deletePost(Long id, User user) {

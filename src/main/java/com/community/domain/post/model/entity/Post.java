@@ -1,7 +1,7 @@
 package com.community.domain.post.model.entity;
 
 import com.community.domain.auth.model.entity.User;
-import com.community.domain.post.model.dto.PostRequestDto;
+import com.community.domain.post.model.dto.request.PostRequestDto;
 import com.community.global.common.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -47,13 +49,15 @@ public class Post extends TimeStamped {
     public void postUpdate(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
+        this.setModifiedAt(LocalDateTime.now());
     }
 
-    public void viewUpdate() {
-        this.viewCount++;
-    }
 
     public void viewCountUpdate(int viewCount) {
         this.viewCount = viewCount;
+    }
+
+    public void likeCountUpdate(int likeCount){
+        this.likeCount = likeCount;
     }
 }

@@ -1,4 +1,4 @@
-package com.community.domain.post.model.dto;
+package com.community.domain.post.model.dto.response;
 
 import com.community.domain.post.model.entity.Comment;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -21,6 +21,7 @@ public class CommentResponseDto {
     private Long id;
     private String username;
     private String content;
+    private Integer likeCount;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -35,6 +36,7 @@ public class CommentResponseDto {
                 .id(comment.getId())
                 .username(comment.getPost().getUser().getUsername())
                 .content(comment.getContent())
+                .likeCount(comment.getLikeCount())
                 .createAt(comment.getCreatedAt())
                 .modifiedAt(comment.getModifiedAt())
                 .build();

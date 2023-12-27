@@ -3,8 +3,8 @@ package com.community.domain.post.application.impl;
 import com.community.domain.auth.model.entity.User;
 import com.community.domain.post.application.CommentService;
 import com.community.domain.post.exception.PostException;
-import com.community.domain.post.model.dto.CommentRequestDto;
-import com.community.domain.post.model.dto.CommentResponseDto;
+import com.community.domain.post.model.dto.request.CommentRequestDto;
+import com.community.domain.post.model.dto.response.CommentResponseDto;
 import com.community.domain.post.model.entity.Comment;
 import com.community.domain.post.model.entity.Post;
 import com.community.domain.post.repository.CommentRepository;
@@ -25,7 +25,9 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public CommentResponseDto createComment(CommentRequestDto requestDto, User user, Long id) {
+    public CommentResponseDto createComment(CommentRequestDto requestDto,
+                                            User user,
+                                            Long id) {
         Post post = findPostOrElseThrow(id);
 
         Comment comment = commentRepository.save(Comment.builder()
@@ -39,7 +41,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, User user) {
+    public CommentResponseDto updateComment(Long postId, Long commentId,
+                                            CommentRequestDto requestDto,
+                                            User user) {
         postExistsCheckOrElseThrow(postId);
         Comment comment = findCommentOrElseThrow(commentId);
         checkPostAuthor(comment, user);
