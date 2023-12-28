@@ -1,13 +1,13 @@
-package com.community.domain.post.application.impl;
+package com.community.domain.comment.application.impl;
 
 import com.community.domain.auth.model.entity.User;
-import com.community.domain.post.application.CommentService;
+import com.community.domain.comment.application.CommentService;
 import com.community.domain.post.exception.PostException;
-import com.community.domain.post.model.dto.request.CommentRequestDto;
-import com.community.domain.post.model.dto.response.CommentResponseDto;
-import com.community.domain.post.model.entity.Comment;
+import com.community.domain.comment.model.dto.CommentRequestDto;
+import com.community.domain.comment.model.dto.CommentResponseDto;
+import com.community.domain.comment.model.entity.Comment;
 import com.community.domain.post.model.entity.Post;
-import com.community.domain.post.repository.CommentRepository;
+import com.community.domain.comment.repository.CommentRepository;
 import com.community.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

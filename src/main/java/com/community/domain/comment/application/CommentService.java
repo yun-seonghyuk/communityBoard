@@ -1,9 +1,9 @@
-package com.community.domain.post.application;
+package com.community.domain.comment.application;
 
 
 import com.community.domain.auth.model.entity.User;
-import com.community.domain.post.model.dto.request.CommentRequestDto;
-import com.community.domain.post.model.dto.response.CommentResponseDto;
+import com.community.domain.comment.model.dto.CommentRequestDto;
+import com.community.domain.comment.model.dto.CommentResponseDto;
 
 
 public interface CommentService {

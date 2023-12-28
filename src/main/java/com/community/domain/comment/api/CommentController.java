@@ -1,9 +1,9 @@
-package com.community.domain.post.api;
+package com.community.domain.comment.api;
 
 import com.community.domain.auth.sercurity.UserDetailsImpl;
-import com.community.domain.post.application.CommentService;
-import com.community.domain.post.model.dto.request.CommentRequestDto;
-import com.community.domain.post.model.dto.response.CommentResponseDto;
+import com.community.domain.comment.application.CommentService;
+import com.community.domain.comment.model.dto.CommentRequestDto;
+import com.community.domain.comment.model.dto.CommentResponseDto;
 import com.community.global.common.ServiceResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

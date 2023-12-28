@@ -2,24 +2,24 @@ package com.community.domain.post.application.impl;
 
 
 import com.community.domain.auth.model.entity.User;
+import com.community.domain.post.repository.PostRepository;
 import com.community.domain.post.application.PostService;
 import com.community.domain.post.exception.PostException;
 import com.community.domain.post.model.dto.request.PostRequestDto;
 import com.community.domain.post.model.dto.response.PostResponseDto;
 import com.community.domain.post.model.dto.response.Posts;
 import com.community.domain.post.model.entity.Post;
-import com.community.domain.post.repository.PostRepository;
 import com.community.global.common.RedisKey;
 import com.community.global.config.RedisCacheConfig;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
 
-import static com.community.global.exception.ErrorCode.NOT_POST_BY_USER;
-import static com.community.global.exception.ErrorCode.POST_NOT_FOUND;
+import static com.community.global.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -83,6 +83,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Async
     public void likePost(Long postId, Long userId) {
 
         // 사용자가 이미 해당 게시물에 대해 좋아요를 눌렀는지 확인
@@ -105,8 +106,8 @@ public class PostServiceImpl implements PostService {
                         .add(RedisKey.userLikedPostsKey(userId, postId), String.valueOf(postId));
             }
 
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to process like for postId: " + postId);
+        } catch (PostException e) {
+            throw new PostException(FAILED__TO_PROCESS_LIKE_FOR_POST_ID);
         }
 
     }

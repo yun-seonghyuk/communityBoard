@@ -1,8 +1,8 @@
 package com.community.domain.auth.model.dto;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class LoginRequestDto{
 
     private String email;

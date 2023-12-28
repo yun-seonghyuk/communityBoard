@@ -55,7 +55,7 @@ public class PostController {
 
         postService.deletePost(id, userDetails.getUser());
         return ResponseEntity.ok()
-                .body(ServiceResult.success("삭제가 완료되었습니다."));
+                .body(ServiceResult.success("delete success!"));
     }
 
     @PostMapping("post/{postId}/like")

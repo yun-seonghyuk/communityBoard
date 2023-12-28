@@ -4,12 +4,9 @@ package com.community.domain.auth.model.entity;
 import com.community.domain.auth.model.type.UserRole;
 import com.community.global.common.entity.TimeStamped;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
 @Builder
 @Entity
 @NoArgsConstructor

@@ -1,15 +1,13 @@
 package com.community.domain.post.model.dto.response;
 
-import com.community.domain.post.model.entity.Comment;
+import com.community.domain.comment.model.dto.CommentResponseDto;
+import com.community.domain.comment.model.entity.Comment;
 import com.community.domain.post.model.entity.Post;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,7 +18,7 @@ import java.util.stream.Collectors;
 
 
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class PostResponseDto {

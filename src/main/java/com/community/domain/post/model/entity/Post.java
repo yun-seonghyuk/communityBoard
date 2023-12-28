@@ -1,13 +1,11 @@
 package com.community.domain.post.model.entity;
 
 import com.community.domain.auth.model.entity.User;
+import com.community.domain.comment.model.entity.Comment;
 import com.community.domain.post.model.dto.request.PostRequestDto;
 import com.community.global.common.entity.TimeStamped;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
@@ -15,7 +13,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
 @Builder
 @Entity
 @Table(name = "post")

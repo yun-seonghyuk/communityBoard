@@ -1,6 +1,6 @@
-package com.community.domain.post.model.dto.response;
+package com.community.domain.comment.model.dto;
 
-import com.community.domain.post.model.entity.Comment;
+import com.community.domain.comment.model.entity.Comment;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;

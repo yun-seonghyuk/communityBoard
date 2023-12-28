@@ -1,7 +1,8 @@
-package com.community.domain.post.model.entity;
+package com.community.domain.comment.model.entity;
 
 import com.community.domain.auth.model.entity.User;
-import com.community.domain.post.model.dto.request.CommentRequestDto;
+import com.community.domain.comment.model.dto.CommentRequestDto;
+import com.community.domain.post.model.entity.Post;
 import com.community.global.common.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,7 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.LocalDateTime;
 
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

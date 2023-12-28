@@ -1,4 +1,4 @@
-package com.community.domain.post.model.dto.request;
+package com.community.domain.comment.model.dto;
 
 import lombok.Getter;
 
