@@ -6,7 +6,6 @@ import com.community.domain.post.model.entity.Post;
 import com.community.global.common.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -23,11 +22,10 @@ public class Comment extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String content;
 
-    @Column
-    @ColumnDefault("0")
+    @Column(nullable = false)
     private Integer likeCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,6 +41,7 @@ public class Comment extends TimeStamped {
                 .user(user)
                 .post(post)
                 .content(content)
+                .likeCount(0)
                 .build();
     }
 

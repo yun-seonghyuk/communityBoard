@@ -42,13 +42,5 @@ public class User extends TimeStamped {
 
     }
 
-//    @Builder(access = AccessLevel.PROTECTED)
-//    public User(Long id, String username, String password, String email, UserRole role ){
-//        this.id = id;
-//        this.username = username;
-//        this.password = password;
-//        this.email = email;
-//        this.role = role;
-//    }
 
 }

@@ -6,7 +6,6 @@ import com.community.domain.post.model.dto.request.PostRequestDto;
 import com.community.global.common.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,10 +28,10 @@ public class Post extends TimeStamped {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @ColumnDefault("0")
+    @Column
     private Integer viewCount;
 
-    @ColumnDefault("0")
+    @Column
     private Integer likeCount;
 
     @ManyToOne(fetch = FetchType.LAZY)

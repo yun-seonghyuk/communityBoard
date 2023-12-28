@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     public void signup(final SignupRequestDto requestDto) {
 
         emailDuplicateCheck(requestDto.getEmail());
+
         UserRole role = userRoleCheck(requestDto);
         String password = passwordEncoder.encode(requestDto.getPassword());
 
