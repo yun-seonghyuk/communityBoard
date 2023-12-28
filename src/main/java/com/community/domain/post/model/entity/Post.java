@@ -11,10 +11,10 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "post")
 public class Post extends TimeStamped {
@@ -29,11 +29,9 @@ public class Post extends TimeStamped {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column
     @ColumnDefault("0")
     private Integer viewCount;
 
-    @Column
     @ColumnDefault("0")
     private Integer likeCount;
 
@@ -43,6 +41,16 @@ public class Post extends TimeStamped {
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Comment> commentList;
+
+    public static Post createPost(User user, PostRequestDto requestDto){
+        return Post.builder()
+                .user(user)
+                .title(requestDto.getTitle())
+                .content(requestDto.getContent())
+                .viewCount(0)
+                .likeCount(0)
+                .build();
+    }
 
     public void postUpdate(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();

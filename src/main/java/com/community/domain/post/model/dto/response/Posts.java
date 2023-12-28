@@ -1,5 +1,6 @@
 package com.community.domain.post.model.dto.response;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Posts {
 
     private List<PostResponseDto> posts = new ArrayList<>();

@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "comment")
 public class Comment extends TimeStamped {
@@ -38,7 +38,15 @@ public class Comment extends TimeStamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public void update(CommentRequestDto requestDto) {
+    public static Comment createComment(User user, Post post, String content){
+        return Comment.builder()
+                .user(user)
+                .post(post)
+                .content(content)
+                .build();
+    }
+
+    public void commentUpdate(CommentRequestDto requestDto) {
         this.content = requestDto.getContent();
         this.setModifiedAt(LocalDateTime.now());
     }

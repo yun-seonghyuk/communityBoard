@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Lock;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post,Long> {
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Post> findAllByOrderByCreatedAtDesc();
     List<Post> findAllByOrderByViewCountDesc();
 }

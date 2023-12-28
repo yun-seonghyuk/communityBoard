@@ -20,7 +20,7 @@ public class PostController {
 
     @PostMapping("/post")
     public ResponseEntity<?> createPost(@RequestBody final PostRequestDto requestDto,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                        @AuthenticationPrincipal final UserDetailsImpl userDetails) {
 
         return ResponseEntity.ok()
                 .body(postService.createPost(requestDto, userDetails.getUser()));
@@ -37,21 +37,21 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<?> getPost(@PathVariable Long id) {
+    public ResponseEntity<?> getPost(@PathVariable final Long id) {
         return ResponseEntity.ok().body(postService.getPost(id));
     }
 
     @PutMapping("/post/update/{id}")
-    public PostResponseDto updatePost(@PathVariable Long id,
-                                      @RequestBody PostRequestDto postRequestDto,
-                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public PostResponseDto updatePost(@PathVariable final Long id,
+                                      @RequestBody final PostRequestDto postRequestDto,
+                                      @AuthenticationPrincipal final UserDetailsImpl userDetails) {
 
         return postService.updatePost(id, postRequestDto, userDetails.getUser());
     }
 
     @DeleteMapping("/post/delete/{id}")
-    public ResponseEntity<?> deletePost(@PathVariable Long id,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> deletePost(@PathVariable final Long id,
+                                        @AuthenticationPrincipal final UserDetailsImpl userDetails) {
 
         postService.deletePost(id, userDetails.getUser());
         return ResponseEntity.ok()
@@ -59,8 +59,8 @@ public class PostController {
     }
 
     @PostMapping("post/{postId}/like")
-    public ResponseEntity<?> likePost(@PathVariable Long postId,
-                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> likePost(@PathVariable final Long postId,
+                                      @AuthenticationPrincipal final UserDetailsImpl userDetails) {
         postService.likePost(postId, userDetails.getUser().getId());
         return ResponseEntity.ok("Post liked successfully");
     }
