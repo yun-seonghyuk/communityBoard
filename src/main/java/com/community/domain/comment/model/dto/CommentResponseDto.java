@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
@@ -29,7 +30,7 @@ public class CommentResponseDto {
     public static CommentResponseDto of(Comment comment) {
         return CommentResponseDto.builder()
                 .id(comment.getId())
-                .username(comment.getPost().getUser().getUsername())
+                .username(comment.getUser().getUsername())
                 .content(comment.getContent())
                 .likeCount(comment.getLikeCount())
                 .createAt(comment.getCreatedAt())

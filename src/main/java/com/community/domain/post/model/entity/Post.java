@@ -38,7 +38,7 @@ public class Post extends TimeStamped {
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
     private List<Comment> commentList;
 
     public static Post createPost(User user, PostRequestDto requestDto){
