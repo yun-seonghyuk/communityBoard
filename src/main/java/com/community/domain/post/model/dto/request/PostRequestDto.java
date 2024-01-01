@@ -1,8 +1,11 @@
 package com.community.domain.post.model.dto.request;
 
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostRequestDto {
     private String title;
     private String content;

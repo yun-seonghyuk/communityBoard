@@ -6,15 +6,14 @@ import com.community.domain.post.model.entity.Post;
 import com.community.global.common.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "comment")
 public class Comment extends TimeStamped {
@@ -23,11 +22,10 @@ public class Comment extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String content;
 
-    @Column
-    @ColumnDefault("0")
+    @Column(nullable = false)
     private Integer likeCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,7 +36,16 @@ public class Comment extends TimeStamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public void update(CommentRequestDto requestDto) {
+    public static Comment createComment(User user, Post post, String content){
+        return Comment.builder()
+                .user(user)
+                .post(post)
+                .content(content)
+                .likeCount(0)
+                .build();
+    }
+
+    public void commentUpdate(CommentRequestDto requestDto) {
         this.content = requestDto.getContent();
         this.setModifiedAt(LocalDateTime.now());
     }

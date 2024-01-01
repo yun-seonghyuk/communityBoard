@@ -6,15 +6,14 @@ import com.community.domain.post.model.dto.request.PostRequestDto;
 import com.community.global.common.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "post")
 public class Post extends TimeStamped {
@@ -30,19 +29,27 @@ public class Post extends TimeStamped {
     private String content;
 
     @Column
-    @ColumnDefault("0")
     private Integer viewCount;
 
     @Column
-    @ColumnDefault("0")
     private Integer likeCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
     private List<Comment> commentList;
+
+    public static Post createPost(User user, PostRequestDto requestDto){
+        return Post.builder()
+                .user(user)
+                .title(requestDto.getTitle())
+                .content(requestDto.getContent())
+                .viewCount(0)
+                .likeCount(0)
+                .build();
+    }
 
     public void postUpdate(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();

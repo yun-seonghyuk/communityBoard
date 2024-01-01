@@ -18,26 +18,26 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/comment")
-    public CommentResponseDto createComment(@PathVariable Long postId,
-                                            @RequestBody CommentRequestDto requestDto,
-                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public CommentResponseDto createComment(@PathVariable final Long postId,
+                                            @RequestBody final CommentRequestDto requestDto,
+                                            @AuthenticationPrincipal final UserDetailsImpl userDetails) {
 
         return commentService.createComment(requestDto, userDetails.getUser(), postId);
     }
 
     @PatchMapping("/comment/{commentId}")
-    public CommentResponseDto updateComment(@PathVariable Long postId,
-                                            @PathVariable Long commentId,
-                                            @RequestBody CommentRequestDto requestDto,
-                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public CommentResponseDto updateComment(@PathVariable final Long postId,
+                                            @PathVariable final Long commentId,
+                                            @RequestBody final CommentRequestDto requestDto,
+                                            @AuthenticationPrincipal final UserDetailsImpl userDetails) {
 
         return commentService.updateComment(postId, commentId, requestDto, userDetails.getUser());
     }
 
     @DeleteMapping("/comment/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable Long postId,
-                                           @PathVariable Long commentId,
-                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> deleteComment(@PathVariable final Long postId,
+                                           @PathVariable final Long commentId,
+                                           @AuthenticationPrincipal final UserDetailsImpl userDetails) {
 
         commentService.deleteComment(postId, commentId, userDetails.getUser());
         return ResponseEntity.ok().body(ServiceResult.success("삭제 성공"));

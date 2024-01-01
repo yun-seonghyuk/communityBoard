@@ -30,11 +30,8 @@ public class CommentServiceImpl implements CommentService {
                                             Long id) {
         Post post = findPostOrElseThrow(id);
 
-        Comment comment = commentRepository.save(Comment.builder()
-                .user(user)
-                .post(post)
-                .content(requestDto.getContent())
-                .build());
+        Comment comment = commentRepository.save(
+                Comment.createComment(user, post, requestDto.getContent()));
 
         return CommentResponseDto.of(comment);
     }
@@ -48,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = findCommentOrElseThrow(commentId);
         checkPostAuthor(comment, user);
 
-        comment.update(requestDto);
+        comment.commentUpdate(requestDto);
 
         return CommentResponseDto.of(comment);
     }

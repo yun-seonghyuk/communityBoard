@@ -30,15 +30,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
-        Post post = postRepository.save(Post.builder()
-                .user(user)
-                .title(requestDto.getTitle())
-                .content(requestDto.getContent())
-                .build());
-
+        Post post = postRepository.save(Post.createPost(user, requestDto));
         return PostResponseDto.of(post);
     }
-
 
     @Transactional(readOnly = true)
     @Override

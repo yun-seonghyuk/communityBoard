@@ -24,16 +24,14 @@ public class UserServiceImpl implements UserService {
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     @Override
-    public void signup(SignupRequestDto requestDto) {
-        emailDuplicateCheck(requestDto.getEmail());
-        UserRole role = userRoleCheck(requestDto);
+    public void signup(final SignupRequestDto requestDto) {
 
-        userRepository.save(User.builder()
-                .email(requestDto.getEmail())
-                .username(requestDto.getUsername())
-                .password(passwordEncoder.encode(requestDto.getPassword()))
-                .role(role)
-                .build());
+        emailDuplicateCheck(requestDto.getEmail());
+
+        UserRole role = userRoleCheck(requestDto);
+        String password = passwordEncoder.encode(requestDto.getPassword());
+
+        userRepository.save( User.createUser(requestDto, password, role));
     }
 
     private void emailDuplicateCheck(String email) {

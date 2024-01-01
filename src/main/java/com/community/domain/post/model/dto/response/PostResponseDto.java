@@ -17,9 +17,7 @@ import java.util.stream.Collectors;
 
 
 
-@Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@Getter
 @Builder
 public class PostResponseDto {
 
