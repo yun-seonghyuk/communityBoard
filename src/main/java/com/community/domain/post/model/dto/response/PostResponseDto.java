@@ -7,7 +7,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,30 +52,13 @@ public class PostResponseDto {
                 .build();
     }
 
-    public static PostResponseDto allPost(Post post) {
+    public static PostResponseDto from(Post post, Integer likeCount, Integer viewCount) {
         return PostResponseDto.builder()
                 .id(post.getId())
                 .username(post.getUser().getUsername())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .viewCount(post.getViewCount())
-                .likeCount(post.getLikeCount())
-                .createAt(post.getCreatedAt())
-                .modifiedAt(post.getModifiedAt())
-                .commentList(post.getCommentList().stream()
-                        .sorted(Comparator.comparing(Comment::getCreatedAt).reversed())
-                        .map(CommentResponseDto::of)
-                        .collect(Collectors.toList()))
-                .build();
-    }
-
-    public static PostResponseDto from(Post post, Integer likeCount) {
-        return PostResponseDto.builder()
-                .id(post.getId())
-                .username(post.getUser().getUsername())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .viewCount(post.getViewCount())
+                .viewCount(viewCount)
                 .likeCount(likeCount)
                 .createAt(post.getCreatedAt())
                 .modifiedAt(post.getModifiedAt())

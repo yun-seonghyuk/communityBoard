@@ -7,6 +7,9 @@ import com.community.domain.post.model.dto.request.PostRequestDto;
 import com.community.domain.post.model.dto.response.PostResponseDto;
 import com.community.global.common.ServiceResult;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,13 +30,15 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<?> getAllPosts() {
-        return ResponseEntity.ok().body(postService.getAllPosts());
+    public ResponseEntity<?> getAllPosts(@PageableDefault(page = 0, size = 10,
+            sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok().body(postService.getAllPosts(pageable));
     }
 
     @GetMapping("/posts/like")
-    public ResponseEntity<?> getAllLikeDescPosts() {
-        return ResponseEntity.ok().body(postService.getAllLikeDescPosts());
+    public ResponseEntity<?> getAllLikeDescPosts(@PageableDefault(page = 0, size = 10,
+            sort = "likeCount", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok().body(postService.getAllLikeDescPosts(pageable));
     }
 
     @GetMapping("/posts/{id}")
@@ -41,7 +46,7 @@ public class PostController {
         return ResponseEntity.ok().body(postService.getPost(id));
     }
 
-    @PutMapping("/post/update/{id}")
+    @PutMapping("/post/{id}")
     public PostResponseDto updatePost(@PathVariable final Long id,
                                       @RequestBody final PostRequestDto postRequestDto,
                                       @AuthenticationPrincipal final UserDetailsImpl userDetails) {
@@ -49,7 +54,7 @@ public class PostController {
         return postService.updatePost(id, postRequestDto, userDetails.getUser());
     }
 
-    @DeleteMapping("/post/delete/{id}")
+    @DeleteMapping("/post/{id}")
     public ResponseEntity<?> deletePost(@PathVariable final Long id,
                                         @AuthenticationPrincipal final UserDetailsImpl userDetails) {
 
