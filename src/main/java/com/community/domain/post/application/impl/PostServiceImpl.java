@@ -2,21 +2,20 @@ package com.community.domain.post.application.impl;
 
 
 import com.community.domain.auth.model.entity.User;
-import com.community.domain.post.repository.PostRepository;
 import com.community.domain.post.application.PostService;
 import com.community.domain.post.exception.PostException;
 import com.community.domain.post.model.dto.request.PostRequestDto;
 import com.community.domain.post.model.dto.response.PostResponseDto;
-import com.community.domain.post.model.dto.response.Posts;
 import com.community.domain.post.model.entity.Post;
-import com.community.global.common.RedisKey;
-import com.community.global.config.RedisCacheConfig;
+import com.community.domain.post.repository.PostRepository;
+import com.community.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 
 import static com.community.global.exception.ErrorCode.*;
@@ -26,7 +25,7 @@ import static com.community.global.exception.ErrorCode.*;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
-    private final RedisCacheConfig redisCacheConfig;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
@@ -36,24 +35,24 @@ public class PostServiceImpl implements PostService {
 
     @Transactional(readOnly = true)
     @Override
-    public Posts getAllPosts() {
-        List<PostResponseDto> posts = postRepository.findAllByOrderByCreatedAtDesc()
-                .stream()
-                .map(PostResponseDto::allPost)
-                .toList();
+    public Page<PostResponseDto> getAllPosts(Pageable pageable) {
+        Page<Post> postPage = postRepository.findAllPost(pageable);
 
-        return new Posts(posts);
+        return postPage.map(post -> PostResponseDto.from(
+                post,
+                getLikesCountForPost(post.getId())
+        ));
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Posts getAllLikeDescPosts() {
-        List<PostResponseDto> posts = postRepository.findAllByOrderByViewCountDesc()
-                .stream()
-                .map(PostResponseDto::allPost)
-                .toList();
+    public Page<PostResponseDto> getAllLikePosts(Pageable pageable) {
+        Page<Post> postPage = postRepository.findAllPostLikeDesc(pageable);
 
-        return new Posts(posts);
+        return postPage.map(post -> PostResponseDto.from(
+                post,
+                getLikesCountForPost(post.getId())
+        ));
     }
 
     @Override
@@ -63,47 +62,41 @@ public class PostServiceImpl implements PostService {
         return PostResponseDto.from(post, getLikesCountForPost(id));
     }
 
-    //    @Async
-    public void postViewCount(Long postId) {
-        redisCacheConfig.redisTemplate()
+    private void postViewCount(Long postId) {
+        redisTemplate
                 .opsForValue()
-                .increment(RedisKey.postViewKey(postId), 1);
+                .increment(RedisUtil.postViewKey(postId), 1);
     }
 
-    public Integer getLikesCountForPost(Long postId) {
-        String likes = redisCacheConfig.redisTemplate().opsForValue()
-                .get(RedisKey.postLikesKey(postId));
+    // dto 반환 좋아요
+    private Integer getLikesCountForPost(Long postId) {
+        String likes = redisTemplate.opsForValue()
+                .get(RedisUtil.postLikesKey(postId));
         return likes != null ? Integer.parseInt(likes) : 0;
     }
 
     @Override
-    @Async
     public void likePost(Long postId, Long userId) {
-
         // 사용자가 이미 해당 게시물에 대해 좋아요를 눌렀는지 확인
         try {
 
-            Boolean alreadyLiked = redisCacheConfig.redisTemplate()
+            Boolean alreadyLiked = redisTemplate
                     .opsForSet()
-                    .isMember(RedisKey.userLikedPostsKey(userId, postId), String.valueOf(postId));
+                    .isMember(RedisUtil.userLikedPostsKey(userId, postId), String.valueOf(postId));
 
             if (alreadyLiked != null && alreadyLiked) {
                 // 이미 좋아요를 누른 경우 좋아요 취소
-                redisCacheConfig.redisTemplate().opsForValue()
-                        .decrement(RedisKey.postLikesKey(postId));
-                redisCacheConfig.redisTemplate().opsForSet()
-                        .remove(RedisKey.userLikedPostsKey(userId, postId), String.valueOf(postId));
+                redisTemplate.opsForValue().decrement(RedisUtil.postLikesKey(postId));
+                redisTemplate.opsForSet().remove(RedisUtil.userLikedPostsKey(userId, postId), String.valueOf(postId));
             } else {
                 // 아직 좋아요를 누르지 않은 경우 좋아요 추가
-                redisCacheConfig.redisTemplate().opsForValue().increment(RedisKey.postLikesKey(postId));
-                redisCacheConfig.redisTemplate().opsForSet()
-                        .add(RedisKey.userLikedPostsKey(userId, postId), String.valueOf(postId));
+                redisTemplate.opsForValue().increment(RedisUtil.postLikesKey(postId));
+                redisTemplate.opsForSet().add(RedisUtil.userLikedPostsKey(userId, postId), String.valueOf(postId));
             }
 
         } catch (PostException e) {
             throw new PostException(FAILED__TO_PROCESS_LIKE_FOR_POST_ID);
         }
-
     }
 
     @Transactional

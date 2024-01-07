@@ -1,6 +1,7 @@
-package com.community.global.common;
+package com.community.global.util;
 
-public class RedisKey {
+public class RedisUtil {
+
     public static String postViewKey(Long postId){
         return "post:" + postId + ":view_count";
     }
