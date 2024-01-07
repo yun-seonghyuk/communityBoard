@@ -7,8 +7,6 @@ import com.community.global.common.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,9 +23,6 @@ public class Comment extends TimeStamped {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private Integer likeCount;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
@@ -41,13 +36,11 @@ public class Comment extends TimeStamped {
                 .user(user)
                 .post(post)
                 .content(content)
-                .likeCount(0)
                 .build();
     }
 
     public void commentUpdate(CommentRequestDto requestDto) {
         this.content = requestDto.getContent();
-        this.setModifiedAt(LocalDateTime.now());
     }
 }
 

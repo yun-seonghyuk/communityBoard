@@ -6,6 +6,7 @@ import com.community.domain.post.application.PostService;
 import com.community.domain.post.model.dto.request.PostRequestDto;
 import com.community.domain.post.model.dto.response.PostResponseDto;
 import com.community.global.common.ServiceResult;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,7 +23,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/post")
-    public ResponseEntity<?> createPost(@RequestBody final PostRequestDto requestDto,
+    public ResponseEntity<?> createPost(@RequestBody @Valid final PostRequestDto requestDto,
                                         @AuthenticationPrincipal final UserDetailsImpl userDetails) {
 
         return ResponseEntity.ok()
@@ -36,9 +37,9 @@ public class PostController {
     }
 
     @GetMapping("/posts/like")
-    public ResponseEntity<?> getAllLikeDescPosts(@PageableDefault(page = 0, size = 10,
+    public ResponseEntity<?> getAllLikePosts(@PageableDefault(page = 0, size = 10,
             sort = "likeCount", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok().body(postService.getAllLikeDescPosts(pageable));
+        return ResponseEntity.ok().body(postService.getAllLikePosts(pageable));
     }
 
     @GetMapping("/posts/{id}")
@@ -48,7 +49,7 @@ public class PostController {
 
     @PutMapping("/post/{id}")
     public PostResponseDto updatePost(@PathVariable final Long id,
-                                      @RequestBody final PostRequestDto postRequestDto,
+                                      @RequestBody @Valid final PostRequestDto postRequestDto,
                                       @AuthenticationPrincipal final UserDetailsImpl userDetails) {
 
         return postService.updatePost(id, postRequestDto, userDetails.getUser());

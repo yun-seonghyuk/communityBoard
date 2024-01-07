@@ -52,13 +52,13 @@ public class PostResponseDto {
                 .build();
     }
 
-    public static PostResponseDto from(Post post, Integer likeCount, Integer viewCount) {
+    public static PostResponseDto from(Post post, Integer likeCount) {
         return PostResponseDto.builder()
                 .id(post.getId())
                 .username(post.getUser().getUsername())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .viewCount(viewCount)
+                .viewCount(post.getViewCount())
                 .likeCount(likeCount)
                 .createAt(post.getCreatedAt())
                 .modifiedAt(post.getModifiedAt())

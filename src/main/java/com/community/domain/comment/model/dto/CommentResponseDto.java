@@ -17,7 +17,6 @@ public class CommentResponseDto {
     private Long id;
     private String username;
     private String content;
-    private Integer likeCount;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -32,7 +31,6 @@ public class CommentResponseDto {
                 .id(comment.getId())
                 .username(comment.getUser().getUsername())
                 .content(comment.getContent())
-                .likeCount(comment.getLikeCount())
                 .createAt(comment.getCreatedAt())
                 .modifiedAt(comment.getModifiedAt())
                 .build();

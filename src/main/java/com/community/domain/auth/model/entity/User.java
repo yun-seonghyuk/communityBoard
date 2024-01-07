@@ -9,6 +9,9 @@ import lombok.*;
 
 @Getter
 @Entity
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)

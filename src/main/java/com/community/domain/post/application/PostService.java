@@ -12,7 +12,7 @@ public interface PostService {
 
     Page<PostResponseDto> getAllPosts(Pageable pageable);
 
-    Page<PostResponseDto> getAllLikeDescPosts(Pageable pageable);
+    Page<PostResponseDto> getAllLikePosts(Pageable pageable);
 
     PostResponseDto getPost(Long id);
 

@@ -8,21 +8,15 @@ import com.community.domain.post.model.dto.request.PostRequestDto;
 import com.community.domain.post.model.dto.response.PostResponseDto;
 import com.community.domain.post.model.entity.Post;
 import com.community.domain.post.repository.PostRepository;
-import com.community.global.common.RedisKey;
-import com.community.global.config.RedisCacheConfig;
+import com.community.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.community.global.exception.ErrorCode.*;
 
@@ -31,7 +25,7 @@ import static com.community.global.exception.ErrorCode.*;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
-    private final RedisCacheConfig redisCacheConfig;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
@@ -43,30 +37,21 @@ public class PostServiceImpl implements PostService {
     @Override
     public Page<PostResponseDto> getAllPosts(Pageable pageable) {
         Page<Post> postPage = postRepository.findAllPost(pageable);
-        List<Long> postIds = postPage.getContent()
-                .stream()
-                .map(Post::getId)
-                .toList();
-        Map<Long, Integer> viewsCountMap = getRedisValuesForPosts(postIds, RedisKey::postViewKey);
-        Map<Long, Integer> likesCountMap = getRedisValuesForPosts(postIds, RedisKey::postLikesKey);
 
         return postPage.map(post -> PostResponseDto.from(
                 post,
-                likesCountMap.getOrDefault(post.getId(), 0),
-                viewsCountMap.getOrDefault(post.getId(), 0)
+                getLikesCountForPost(post.getId())
         ));
-
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Page<PostResponseDto> getAllLikeDescPosts(Pageable pageable) {
+    public Page<PostResponseDto> getAllLikePosts(Pageable pageable) {
         Page<Post> postPage = postRepository.findAllPostLikeDesc(pageable);
 
         return postPage.map(post -> PostResponseDto.from(
                 post,
-                getLikesCountForPost(post.getId()),
-                getViewsCountForPost(post.getId())
+                getLikesCountForPost(post.getId())
         ));
     }
 
@@ -74,67 +59,44 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto getPost(Long id) {
         Post post = findPostOrElseThrow(id);
         postViewCount(id);
-        return PostResponseDto.from(post, getLikesCountForPost(id), getViewsCountForPost(id));
-    }
-
-    private Map<Long, Integer> getRedisValuesForPosts(List<Long> postIds, Function<Long, String> redisKeyFunction) {
-        List<String> values = redisCacheConfig.redisTemplate().opsForValue().multiGet(
-                postIds.stream().map(redisKeyFunction).collect(Collectors.toList())
-        );
-
-        Map<Long, Integer> valuesMap = new HashMap<>();
-        for (int i = 0; i < postIds.size(); i++) {
-            valuesMap.put(postIds.get(i), values.get(i) != null ? Integer.parseInt(values.get(i)) : 0);
-        }
-        return valuesMap;
+        return PostResponseDto.from(post, getLikesCountForPost(id));
     }
 
     private void postViewCount(Long postId) {
-        redisCacheConfig.redisTemplate()
+        redisTemplate
                 .opsForValue()
-                .increment(RedisKey.postViewKey(postId), 1);
+                .increment(RedisUtil.postViewKey(postId), 1);
     }
 
+    // dto 반환 좋아요
     private Integer getLikesCountForPost(Long postId) {
-        String likes = redisCacheConfig.redisTemplate().opsForValue()
-                .get(RedisKey.postLikesKey(postId));
+        String likes = redisTemplate.opsForValue()
+                .get(RedisUtil.postLikesKey(postId));
         return likes != null ? Integer.parseInt(likes) : 0;
     }
 
-    private Integer getViewsCountForPost(Long postId) {
-        String views = redisCacheConfig.redisTemplate().opsForValue()
-                .get(RedisKey.postViewKey(postId));
-        return views != null ? Integer.parseInt(views) : 0;
-    }
-
     @Override
-    @Async
     public void likePost(Long postId, Long userId) {
-
         // 사용자가 이미 해당 게시물에 대해 좋아요를 눌렀는지 확인
         try {
 
-            Boolean alreadyLiked = redisCacheConfig.redisTemplate()
+            Boolean alreadyLiked = redisTemplate
                     .opsForSet()
-                    .isMember(RedisKey.userLikedPostsKey(userId, postId), String.valueOf(postId));
+                    .isMember(RedisUtil.userLikedPostsKey(userId, postId), String.valueOf(postId));
 
             if (alreadyLiked != null && alreadyLiked) {
                 // 이미 좋아요를 누른 경우 좋아요 취소
-                redisCacheConfig.redisTemplate().opsForValue()
-                        .decrement(RedisKey.postLikesKey(postId));
-                redisCacheConfig.redisTemplate().opsForSet()
-                        .remove(RedisKey.userLikedPostsKey(userId, postId), String.valueOf(postId));
+                redisTemplate.opsForValue().decrement(RedisUtil.postLikesKey(postId));
+                redisTemplate.opsForSet().remove(RedisUtil.userLikedPostsKey(userId, postId), String.valueOf(postId));
             } else {
                 // 아직 좋아요를 누르지 않은 경우 좋아요 추가
-                redisCacheConfig.redisTemplate().opsForValue().increment(RedisKey.postLikesKey(postId));
-                redisCacheConfig.redisTemplate().opsForSet()
-                        .add(RedisKey.userLikedPostsKey(userId, postId), String.valueOf(postId));
+                redisTemplate.opsForValue().increment(RedisUtil.postLikesKey(postId));
+                redisTemplate.opsForSet().add(RedisUtil.userLikedPostsKey(userId, postId), String.valueOf(postId));
             }
 
         } catch (PostException e) {
             throw new PostException(FAILED__TO_PROCESS_LIKE_FOR_POST_ID);
         }
-
     }
 
     @Transactional
