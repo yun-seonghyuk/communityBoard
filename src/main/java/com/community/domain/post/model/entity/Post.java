@@ -5,10 +5,12 @@ import com.community.domain.comment.model.entity.Comment;
 import com.community.domain.post.model.dto.request.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Document(indexName = "post")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
