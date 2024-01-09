@@ -45,7 +45,7 @@ public class Post {
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<Comment> commentList;
 
     public static Post createPost(User user, PostRequestDto requestDto){
